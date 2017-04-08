@@ -70,11 +70,16 @@ func ExampleNew() {
 
 func ExampleMe() {
 	log.SetFlags(log.Lshortfile)
-	// Create a new WorkQueue.
-	wq := workqueue.New(1024)
 
-	// This sync.WaitGroup is to make sure we wait until all of our work
-	// is done.
+	numWorkers := 10
+
+	ctx := context.Background()
+	ctx, cancel = context.WithCancel(ctx)
+
+	// Create a new WorkQueue.
+	wq := workqueue.New(ctx, numWorkers)
+
+	// This sync.WaitGroup is to make sure we wait until all of our work is done.
 	var wg sync.WaitGroup
 
 	// Do some work.

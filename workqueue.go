@@ -12,7 +12,7 @@ type WorkQueue chan Work
 
 // New creates a Workqueue (chan Work) and a dispatcher and returns a channel that you send a zero-argument function to.
 // The dispatcher will make workers and listens on the returned channel for work requests and forwards them to a worker.
-func New(numWorkers int) WorkQueue {
+func New(ctx context.Context, numWorkers int) WorkQueue {
 	queue := make(WorkQueue)
 	d := make(dispatcher, numWorkers)
 	go d.dispatch(queue)
@@ -23,7 +23,7 @@ func New(numWorkers int) WorkQueue {
 type dispatcher chan chan Work
 
 // newDispatcher creates a Work channel of depth number of workers
-// The New() fcn duplicates this functionality, or can create standalone dispatcher
+// The New() fcn duplicates this functionality, or can create standalone dispatcher for te
 func newDispatcher(queue WorkQueue, numWorkers int) dispatcher {
 	d := make(dispatcher, numWorkers)
 	go d.dispatch(queue)
